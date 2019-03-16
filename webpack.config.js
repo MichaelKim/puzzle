@@ -29,7 +29,7 @@ const config = {
               '@babel/preset-react',
               '@babel/preset-flow'
             ],
-            plugins: []
+            plugins: ['@babel/plugin-proposal-class-properties']
           }
         }
       }
