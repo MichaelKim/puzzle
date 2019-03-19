@@ -2,6 +2,9 @@ const path = require('path');
 const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin;
 
 const config = {
   entry: {
@@ -32,13 +35,28 @@ const config = {
             plugins: ['@babel/plugin-proposal-class-properties']
           }
         }
+      },
+      {
+        test: /\.css$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader
+          },
+          'css-loader'
+        ]
+      },
+      {
+        test: /\.(ttf|woff|woff2)$/,
+        use: 'file-loader?name=fonts/[name].[ext]'
       }
     ]
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: path.resolve('./src/index.html')
-    })
+    }),
+    new MiniCssExtractPlugin()
+    // new BundleAnalyzerPlugin()
   ],
   stats: {
     colors: true

@@ -26,6 +26,11 @@ const S = {
       margin: 0;
     }
 
+    h2 {
+      font-size: 35px;
+      margin: 0;
+    }
+
     p {
       font-size: 20px;
     }

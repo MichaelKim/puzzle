@@ -28,8 +28,8 @@ class BoardCol extends React.Component<Props> {
   }
 
   render() {
-    const width = [4, 4, 3, 5][this.props.index];
-    const height = [4, 4, 3, 5][this.props.index];
+    const width = [4, 4, 3, 5, 4][this.props.index];
+    const height = [4, 4, 3, 5, 4][this.props.index];
 
     return (
       <S.BoardCol>
