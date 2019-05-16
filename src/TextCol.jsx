@@ -4,11 +4,12 @@ import * as React from 'react';
 import { render } from 'react-dom';
 import styled from 'styled-components';
 import { Waypoint } from 'react-waypoint';
-import katex from 'katex';
-import 'katex/dist/katex.min.css';
 
 import Board from 'Board.jsx';
 import Note from 'Note.jsx';
+import Math from 'InlineMath.jsx';
+import BlockMath from 'BlockMath.jsx';
+import TextBlock from 'TextBlock.jsx';
 
 const S = {
   TextCol: styled.div`
@@ -17,24 +18,6 @@ const S = {
     max-width: calc(50% - 50px);
   `
 };
-
-class Block extends React.Component<{|
-  +space: number,
-  +title: string,
-  +children: React.Node,
-  +onEnter: () => void
-|}> {
-  render() {
-    return (
-      <div>
-        <div style={{ height: this.props.space }} />
-        <Waypoint onEnter={this.props.onEnter} bottomOffset="50%" />
-        {this.props.title ? <h2>{this.props.title}</h2> : null}
-        {this.props.children}
-      </div>
-    );
-  }
-}
 
 const blocks = [
   {
@@ -57,8 +40,8 @@ const blocks = [
           algorithms.
         </p>
         <p>
-          Explore the various methods used to solve this puzzle in the{' '}
-          <i>fewest</i> moves possible in this interactive visualization.
+          Keep scrolling! We'll explore the various methods used to solve this
+          puzzle in the <i>fewest</i> moves possible.
         </p>
       </>
     )
@@ -69,8 +52,30 @@ const blocks = [
     body: (
       <>
         <p>
-          The board shown on the right is <i>interactive!</i> Move the tiles by
-          clicking on them or using the WASD keys on your keyboard.
+          This guide doesn't require any prior knowledge of algorithms, but will
+          make references to data structures and a little bit of graph theory.
+        </p>
+        <p>
+          Also, the board shown on the right is <i>interactive!</i> Move the
+          tiles by clicking on them or using the WASD keys on your keyboard.
+        </p>
+      </>
+    )
+  },
+  {
+    space: 300,
+    title: 'Introduction',
+    body: (
+      <>
+        <p>
+          The 15 Puzzle is the grid on the right. It consists of 15 square tiles
+          numbered from 1 to 15, placed on a 4x4 grid, with one tile missing in
+          the corner.
+        </p>
+        <p>
+          Initially, the tiles in the board will be scrambled up, completely out
+          of order. The goal is to slide the tiles into the blank to bring the
+          board back to its solved state.
         </p>
       </>
     )
@@ -83,8 +88,8 @@ const blocks = [
         <p>
           We can represent each board state as a node in a graph, where edges
           connect boards that can be turned into each other by sliding a tile.
-          Each edge has the same weight and are undirected, reflecting how a
-          tile slide can be undone by moving the tile back.
+          Each edge is undirected and has the same weight, reflecting how a tile
+          slide can be undone by moving the tile back.
         </p>
         <p>
           Then, finding the optimal solution to a board is equivalent to{' '}
@@ -144,23 +149,21 @@ const blocks = [
     body: (
       <>
         <p>
-          A common pathfinding algorithm is <b>A*</b>. In contrast to BFS, A* is
+          A common pathfinding algorithm is <b>A*</b>. Unlike BFS, A* is
           informed as it uses a heuristic which estimates the minimum cost to
           the end state. At each step of the search, A* select the path with the
-          minimum value of f(n):
+          minimum value of <Math text="f(n)" />:
         </p>
-        <div
-          style={{ display: 'flex', justifyContent: 'center' }}
-          dangerouslySetInnerHTML={{
-            __html: katex.renderToString('f(n) = g(n) + h(n)', {
-              throwOnError: false
-            })
-          }}
-        />
+        <BlockMath text="f(n) = g(n) + h(n)" />
         <p>
-          Here, n is the next node in the path, g(n) is the distance from the
-          start to n, and h(n) is the cost from n to the end calculated using a
-          heuristic.
+          Here, <Math text="n" /> is the next node in the path,{' '}
+          <Math text="g(n)" /> is the distance from the start to{' '}
+          <Math text="n" />, and <Math text="h(n)" /> is the cost from{' '}
+          <Math text="n" /> to the end calculated using a heuristic.
+        </p>
+        <p>
+          See how A* incorporates information of a board state to estimate the
+          actual cost.
         </p>
       </>
     )
@@ -183,14 +186,14 @@ class TextCol extends React.Component<{|
     return (
       <S.TextCol>
         {blocks.map((block, i) => (
-          <Block
+          <TextBlock
             space={block.space}
             title={block.title}
             onEnter={() => this.props.onEnter(i)}
             key={i}
           >
             {block.body}
-          </Block>
+          </TextBlock>
         ))}
       </S.TextCol>
     );
