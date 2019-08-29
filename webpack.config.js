@@ -17,6 +17,11 @@ const config = {
   module: {
     rules: [
       {
+        test: /\.md$/,
+        exclude: /node_modules/,
+        use: 'raw-loader'
+      },
+      {
         test: /\.jsx?$/,
         exclude: /node_modules/,
         use: {
@@ -60,9 +65,6 @@ const config = {
   ],
   stats: {
     colors: true
-  },
-  resolve: {
-    modules: [path.resolve('./node_modules'), path.resolve('./src')]
   }
 };
 

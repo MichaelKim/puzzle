@@ -1,18 +1,28 @@
 // @flow strict
 
 import * as React from 'react';
-import { render } from 'react-dom';
-import katex from 'katex';
+import styled from 'styled-components';
 import 'katex/dist/katex.min.css';
 
-import InlineMath from 'InlineMath.jsx';
+import InlineMath from './InlineMath.jsx';
 
-function BlockMath(props: {| +text: string |}) {
+type Props = {|
+  +text: string
+|};
+
+const BlockMath = (props: Props) => {
   return (
-    <div style={{ display: 'flex', justifyContent: 'center' }}>
+    <S.Root>
       <InlineMath text={props.text} />
-    </div>
+    </S.Root>
   );
-}
+};
+
+const S = {
+  Root: styled.div`
+    display: flex;
+    justify-content: center;
+  `
+};
 
 export default BlockMath;

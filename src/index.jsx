@@ -4,8 +4,21 @@ import * as React from 'react';
 import { render } from 'react-dom';
 import styled from 'styled-components';
 
-import TextCol from 'TextCol.jsx';
-import BoardCol from 'BoardCol.jsx';
+import TextCol from './TextCol.jsx';
+import BoardCol from './BoardCol.jsx';
+
+const Root = () => {
+  const [index, setIndex] = React.useState(0);
+
+  return (
+    <S.Root>
+      <S.Container>
+        <TextCol onEnter={setIndex} />
+        <BoardCol index={index} />
+      </S.Container>
+    </S.Root>
+  );
+};
 
 const S = {
   Root: styled.div`
@@ -41,32 +54,6 @@ const S = {
     padding: 0 20px;
   `
 };
-
-class Root extends React.Component<
-  {||},
-  {|
-    +currIndex: number
-  |}
-> {
-  state = {
-    currIndex: 0
-  };
-
-  _onEnter = (index: number) => {
-    this.setState({ currIndex: index });
-  };
-
-  render() {
-    return (
-      <S.Root>
-        <S.Container>
-          <TextCol onEnter={this._onEnter} />
-          <BoardCol index={this.state.currIndex} />
-        </S.Container>
-      </S.Root>
-    );
-  }
-}
 
 const root = document.getElementById('root');
 if (root) {

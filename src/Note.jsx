@@ -1,8 +1,27 @@
 // @flow strict
 
 import * as React from 'react';
-import { render } from 'react-dom';
 import styled from 'styled-components';
+
+type Props = {|
+  +num: number,
+  +children: React.Node
+|};
+
+const Note = (props: Props) => {
+  const [visible, setVisible] = React.useState(false);
+
+  const onClick = () => setVisible(!visible);
+
+  return (
+    <S.Box onClick={onClick}>
+      [{props.num}]
+      <S.Note style={{ display: visible ? 'block' : 'none' }}>
+        {props.children}
+      </S.Note>
+    </S.Box>
+  );
+};
 
 const S = {
   Box: styled.a`
@@ -22,32 +41,5 @@ const S = {
     padding: 4px;
   `
 };
-
-class Note extends React.Component<
-  {|
-    +num: number,
-    +children: React.Node
-  |},
-  {| +visible: boolean |}
-> {
-  state = {
-    visible: false
-  };
-
-  _onClick = () => {
-    this.setState(({ visible }) => ({ visible: !visible }));
-  };
-
-  render() {
-    return (
-      <S.Box onClick={this._onClick}>
-        [{this.props.num}]
-        <S.Note style={{ display: this.state.visible ? 'block' : 'none' }}>
-          {this.props.children}
-        </S.Note>
-      </S.Box>
-    );
-  }
-}
 
 export default Note;

@@ -1,10 +1,9 @@
 // @flow strict
 
 import * as React from 'react';
-import { render } from 'react-dom';
 import styled from 'styled-components';
 
-import Tile from 'Tile.jsx';
+import Tile from './Tile.jsx';
 
 type TileType = {|
   num: number,
@@ -27,16 +26,6 @@ type State = {|
     y: number
   }
 |};
-
-const S = {
-  Board: styled.div`
-    position: relative;
-    width: 400px;
-    height: 400px;
-    border: 2px solid black;
-    border-radius: 6px;
-  `
-};
 
 class Board extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -173,5 +162,16 @@ class Board extends React.Component<Props, State> {
     );
   }
 }
+
+const S = {
+  Board: styled.div`
+    position: relative;
+    width: 400px;
+    height: 400px;
+    border: 2px solid black;
+    border-radius: 6px;
+    user-select: none;
+  `
+};
 
 export default Board;

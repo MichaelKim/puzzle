@@ -7,13 +7,12 @@
 [lints]
 
 [options]
-module.system.node.resolve_dirname=node_modules
-module.system.node.resolve_dirname=./src
+module.name_mapper.extension='md' -> '<PROJECT_ROOT>/md-modules.js'
 suppress_comment=\\(.\\|\n\\)*\\$FlowFixMe
 
 [strict]
 nonstrict-import
 unclear-type
 unsafe-getters-setters
-; untyped-import
+untyped-import
 untyped-type-import

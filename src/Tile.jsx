@@ -1,7 +1,6 @@
 // @flow strict
 
 import * as React from 'react';
-import { render } from 'react-dom';
 import styled from 'styled-components';
 
 type Props = {|
@@ -13,7 +12,23 @@ type Props = {|
   +onClick: (x: number, y: number) => void
 |};
 
-type State = {||};
+const Tile = ({ x, y, value, width, height, onClick }: Props) => {
+  const _onClick = () => onClick(x, y);
+
+  return (
+    <S.Tile
+      onClick={_onClick}
+      style={{
+        width: width + '%',
+        height: height + '%',
+        left: x * width + '%',
+        top: y * height + '%'
+      }}
+    >
+      <S.Inner>{value}</S.Inner>
+    </S.Tile>
+  );
+};
 
 const S = {
   Tile: styled.div`
@@ -33,34 +48,7 @@ const S = {
     border: 1px solid black;
     font-size: 40px;
     border-radius: 10%;
-    position: relative;
-    top: -50%;
-    left: -50%;
   `
 };
-
-class Tile extends React.Component<Props, State> {
-  _onClick = () => {
-    this.props.onClick(this.props.x, this.props.y);
-  };
-
-  render() {
-    const { width, height, value, x, y } = this.props;
-
-    return (
-      <S.Tile
-        onClick={this._onClick}
-        style={{
-          width: width + '%',
-          height: height + '%',
-          left: (x + 0.5) * width + '%',
-          top: (y + 0.5) * height + '%'
-        }}
-      >
-        <S.Inner>{value}</S.Inner>
-      </S.Tile>
-    );
-  }
-}
 
 export default Tile;
