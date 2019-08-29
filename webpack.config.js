@@ -1,10 +1,9 @@
 const path = require('path');
-const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-  .BundleAnalyzerPlugin;
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+//   .BundleAnalyzerPlugin;
 
 const config = {
   entry: {
@@ -19,7 +18,7 @@ const config = {
       {
         test: /\.md$/,
         exclude: /node_modules/,
-        use: 'raw-loader'
+        use: 'frontmatter-markdown-loader'
       },
       {
         test: /\.jsx?$/,
@@ -49,6 +48,10 @@ const config = {
           },
           'css-loader'
         ]
+      },
+      {
+        test: /\.png$/,
+        use: 'file-loader?name=[name].[ext]'
       },
       {
         test: /\.(ttf|woff|woff2)$/,

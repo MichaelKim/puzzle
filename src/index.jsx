@@ -7,6 +7,8 @@ import styled from 'styled-components';
 import TextCol from './TextCol.jsx';
 import BoardCol from './BoardCol.jsx';
 
+import './favicon.png';
+
 const Root = () => {
   const [index, setIndex] = React.useState(0);
 

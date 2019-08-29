@@ -33,8 +33,7 @@ const Tile = ({ x, y, value, width, height, onClick }: Props) => {
 const S = {
   Tile: styled.div`
     position: absolute;
-    transition: width 0.2s ease 0.2s, height 0.2s ease 0.2s, top 0.2s ease,
-      left 0.2s ease;
+    transition: width 0.3s ease, height 0.3s ease, top 0.3s ease, left 0.3s ease;
     display: flex;
     align-items: center;
     justify-content: center;

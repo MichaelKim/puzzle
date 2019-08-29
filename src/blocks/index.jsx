@@ -1,8 +1,6 @@
 // @flow strict
 
 import * as React from 'react';
-import fm from 'front-matter';
-import ReactMarkdown from 'react-markdown';
 
 // Import all markdown files
 import Page1 from './1-start.md';
@@ -20,17 +18,13 @@ import Page12 from './12-linear-conflicts.md';
 import Page13 from './13-inversion-distance.md';
 import Page14 from './14-walking-distance.md';
 
-type FrontMatter = {|
-  +title: string,
-  +space: number
-|};
-
-type Block = {|
-  ...FrontMatter,
-  +body: React.Node
-|};
-
-const pages: Array<string> = [
+const pages: Array<{
+  +attributes: {|
+    +title: string,
+    +space: number
+  |},
+  +html: string
+}> = [
   Page1,
   Page2,
   Page3,
@@ -47,14 +41,14 @@ const pages: Array<string> = [
   Page14
 ];
 
-const blocks: Array<Block> = pages.map(p => {
-  const { attributes, body } = fm<FrontMatter>(p);
-
-  return {
-    title: attributes.title,
-    space: attributes.space,
-    body: <ReactMarkdown source={body} />
-  };
-});
+const blocks: Array<{|
+  +title: string,
+  +space: number,
+  +body: React.Node
+|}> = pages.map(p => ({
+  title: p.attributes.title,
+  space: p.attributes.space,
+  body: <div dangerouslySetInnerHTML={{ __html: p.html }} />
+}));
 
 export default blocks;
