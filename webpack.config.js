@@ -2,11 +2,13 @@ const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-//   .BundleAnalyzerPlugin;
+const md = require('markdown-it')({ html: true });
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin;
 
 const config = {
   entry: {
+    loader: './md-modules/md-loader.jsx',
     main: './src/index.jsx'
   },
   output: {
@@ -18,7 +20,13 @@ const config = {
       {
         test: /\.md$/,
         exclude: /node_modules/,
-        use: 'frontmatter-markdown-loader'
+        use: {
+          loader: 'frontmatter-markdown-loader',
+          options: {
+            markdown: body =>
+              md.use(require('./md-modules/md-loader')).render(body)
+          }
+        }
       },
       {
         test: /\.jsx?$/,
@@ -63,8 +71,8 @@ const config = {
     new HtmlWebpackPlugin({
       template: path.resolve('./src/index.html')
     }),
-    new MiniCssExtractPlugin()
-    // new BundleAnalyzerPlugin()
+    new MiniCssExtractPlugin(),
+    new BundleAnalyzerPlugin()
   ],
   stats: {
     colors: true

@@ -7,7 +7,7 @@
 [lints]
 
 [options]
-module.name_mapper.extension='md' -> '<PROJECT_ROOT>/md-modules.js'
+module.name_mapper.extension='md' -> '<PROJECT_ROOT>/md-modules/md-type.js'
 suppress_comment=\\(.\\|\n\\)*\\$FlowFixMe
 
 [strict]

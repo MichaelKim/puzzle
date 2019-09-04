@@ -8,6 +8,7 @@ import TextCol from './TextCol.jsx';
 import BoardCol from './BoardCol.jsx';
 
 import './favicon.png';
+import 'katex/dist/katex.min.css';
 
 const Root = () => {
   const [index, setIndex] = React.useState(0);
@@ -34,6 +35,11 @@ const S = {
     * {
       font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Roboto, Arial,
         sans-serif;
+    }
+
+    pre,
+    code {
+      font-family: monospace;
     }
 
     h1 {
