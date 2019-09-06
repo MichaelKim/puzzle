@@ -1,22 +1,39 @@
-'use strict';
+import React from 'react';
+import { renderToString } from 'react-dom/server';
 
-const katex = require('katex');
-const React = require('react');
-const ReactDOM = require('react-dom');
-const BlockMath = require('./BlockMath.jsx');
+import BlockMath from './BlockMath.jsx';
+import InlineMath from './InlineMath.jsx';
+// import Note from './Note.jsx';
 
-console.log(
-  ReactDOM.renderToString(React.createElement(BlockMath, { text: 'a^b' }, null))
-);
+export default function(md) {
+  // function note(state) {
+  //   // [x][foo bar]
+  //   const match = state.src.substring(state.pos).match(/\[x\]\[([^\]]+)\]/);
 
-module.exports = function(md) {
+  //   if (match == null) {
+  //     return false;
+  //   }
+
+  //   console.log(match);
+  //   console.log(state.src.substring(state.pos));
+
+  //   let token = state.push('html_inline', '', 0);
+  //   token.content = renderToString(<Note num={0}>{match[1]}</Note>);
+
+  //   state.pos += match[0].length;
+
+  //   return true;
+  // }
+
   function inlinemath(state) {
+    // Starting $
     if (state.src[state.pos] !== '$') {
       return false;
     }
 
     const idx = state.src.indexOf('$', state.pos + 1);
 
+    // Ending $
     if (idx === -1) {
       return false;
     }
@@ -24,12 +41,7 @@ module.exports = function(md) {
     const math = state.src.substring(state.pos + 1, idx);
 
     let token = state.push('html_inline', '', 0);
-    token.content = `<span style='font-size: 18px;'>${katex.renderToString(
-      math,
-      {
-        throwOnError: false
-      }
-    )}</span>`;
+    token.content = renderToString(<InlineMath text={math} />);
 
     state.pos = idx + 1;
 
@@ -52,16 +64,12 @@ module.exports = function(md) {
 
     let token = state.push('html_block', '', 0);
     token.map = [startLine, state.line];
-    token.content = `<div style='display: flex; justify-content: center;'>${katex.renderToString(
-      math,
-      {
-        throwOnError: false
-      }
-    )}</div>`;
+    token.content = renderToString(<BlockMath text={math} />);
 
     return true;
   }
 
   md.inline.ruler.push('inline_math', inlinemath);
+  // md.inline.ruler.push('note', note);
   md.block.ruler.before('paragraph', 'block_math', blockmath);
-};
+}

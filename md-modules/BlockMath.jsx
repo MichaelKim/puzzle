@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import styled from 'styled-components';
-import 'katex/dist/katex.min.css';
+// import 'katex/dist/katex.min.css'
 
 import InlineMath from './InlineMath.jsx';
 

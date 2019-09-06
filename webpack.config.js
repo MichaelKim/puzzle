@@ -2,13 +2,14 @@ const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const md = require('markdown-it')({ html: true });
+const md = require('markdown-it')({ html: true }).use(
+  require('./md-modules/').default
+);
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin;
 
 const config = {
   entry: {
-    loader: './md-modules/md-loader.jsx',
     main: './src/index.jsx'
   },
   output: {
@@ -23,8 +24,7 @@ const config = {
         use: {
           loader: 'frontmatter-markdown-loader',
           options: {
-            markdown: body =>
-              md.use(require('./md-modules/md-loader')).render(body)
+            markdown: body => md.render(body)
           }
         }
       },
@@ -71,8 +71,7 @@ const config = {
     new HtmlWebpackPlugin({
       template: path.resolve('./src/index.html')
     }),
-    new MiniCssExtractPlugin(),
-    new BundleAnalyzerPlugin()
+    new MiniCssExtractPlugin()
   ],
   stats: {
     colors: true
@@ -95,6 +94,7 @@ if (process.env.NODE_ENV === 'production') {
       })
     ]
   };
+  config.plugins.push(new BundleAnalyzerPlugin());
 } else {
   config.mode = 'development';
   config.devtool = '#cheap-module-source-map';
