@@ -3,7 +3,7 @@ title: Solving the Puzzle
 space: 300
 ---
 
-In Computer Science, problems are often solved by representing them as a different problem, of which there are known solutions for. [x][formally, these transformations are called **reductions**. in this case, the problem of finding the shortest solution can be **reduced** into a different problem.] We're going to do the same with the 15 Puzzle.
+In Computer Science, problems are often solved by representing them as a different problem, of which there are known solutions for. [^][[Formally, these transformations are called **reductions**. In this case, the problem of finding the shortest solution can be **reduced** into a different problem.]] We're going to do the same with the 15 Puzzle.
 
 To help make the conversion, there's two things to note about the puzzle:
 

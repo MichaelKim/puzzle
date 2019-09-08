@@ -1,23 +1,5 @@
 // @flow strict
 
-declare module 'react-markdown' {
-  declare type ReactMarkdownProps = {|
-    +source: string
-  |};
-  declare export default function ReactMarkdown(
-    props: ReactMarkdownProps
-  ): React.Node;
-}
-
-declare module 'front-matter' {
-  declare export default function fm<T: {}>(
-    data: string
-  ): {|
-    +attributes: T,
-    +body: string
-  |};
-}
-
 declare module 'react-waypoint' {
   declare type WaypointProps = {|
     +onEnter: () => mixed,
@@ -39,6 +21,10 @@ declare module 'styled-components' {
     div: React$ElementRef<'div'>,
     span: React$ElementRef<'span'>
   };
+
+  declare export function createGlobalStyle(
+    Array<string>
+  ): React$AbstractComponent<{}, {}>;
 
   declare export default $ObjMap<
     BuiltinElementInstances,

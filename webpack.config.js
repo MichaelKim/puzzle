@@ -2,9 +2,8 @@ const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const md = require('markdown-it')({ html: true }).use(
-  require('./md-modules/').default
-);
+const remarkMath = require('remark-math');
+const rehypeKatex = require('rehype-katex');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin;
 
@@ -21,12 +20,32 @@ const config = {
       {
         test: /\.md$/,
         exclude: /node_modules/,
-        use: {
-          loader: 'frontmatter-markdown-loader',
-          options: {
-            markdown: body => md.render(body)
-          }
-        }
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                [
+                  '@babel/preset-env',
+                  {
+                    targets: '>1%, not ie 11, not op_mini all'
+                  }
+                ],
+                '@babel/preset-react',
+                '@babel/preset-flow'
+              ],
+              plugins: ['@babel/plugin-proposal-class-properties']
+            }
+          },
+          {
+            loader: '@mdx-js/loader',
+            options: {
+              remarkPlugins: [remarkMath],
+              rehypePlugins: [rehypeKatex]
+            }
+          },
+          path.join(__dirname, './md-modules/md-loader')
+        ]
       },
       {
         test: /\.jsx?$/,

@@ -34,6 +34,7 @@ const S = {
   Note: styled.span`
     position: absolute;
     color: black;
+    background-color: white;
     font-size: 16px;
     width: 300px;
     border: 1px solid black;

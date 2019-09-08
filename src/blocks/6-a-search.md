@@ -11,6 +11,6 @@ $$f(n) = g(n) + h(n)$$
 
 Here, $n$ is the next node in the path, $g(n)$ is the distance from the start to $n$, and $h(n)$ is the result from the magical heuristic function.
 
-Note that if $h(n) = 0$ for all nodes, A\* will perform exactly the same as BFS! ([x] This is only true for unweighted graphs. In general, A\* without a heuristic is the same as Dijkstra.)
+Note that if $h(n) = 0$ for all nodes, A\* will perform exactly the same as BFS! [^][[This is only true for unweighted graphs. In general, A\* without a heuristic is the same as Dijkstra.]]
 
 As long as the heuristic _never overestimates_ the cost, A\* will produce an optimal solution.

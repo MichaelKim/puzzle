@@ -171,6 +171,7 @@ const S = {
     border: 2px solid black;
     border-radius: 6px;
     user-select: none;
+    background-color: white;
   `
 };
 

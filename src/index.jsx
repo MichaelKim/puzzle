@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { render } from 'react-dom';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 
 import TextCol from './TextCol.jsx';
 import BoardCol from './BoardCol.jsx';
@@ -15,6 +15,7 @@ const Root = () => {
 
   return (
     <S.Root>
+      <S.Global />
       <S.Container>
         <TextCol onEnter={setIndex} />
         <BoardCol index={index} />
@@ -24,6 +25,12 @@ const Root = () => {
 };
 
 const S = {
+  Global: createGlobalStyle`
+    body {
+      background-color: #fffafa;
+      margin: 0;
+    }
+  `,
   Root: styled.div`
     margin: 0;
     padding: 0;
