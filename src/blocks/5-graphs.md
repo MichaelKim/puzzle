@@ -11,4 +11,4 @@ For an undirected, unweighted graph, a simple **Breadth First Search** can get t
 
 The issue with **BFS** is that the search lacks information. Essentially, it brute forces through the nodes, trying all nodes at a certain depth before going deeper, until it happens to stumble upon the goal. There's information hidden in the board that can point the search in a right direction. (EDIT: It's clear that some boards are similar to each other than others. We could use the board to make an educated guess as to what the shortest path will be like. )
 
-[^][[ **Dijkstra** is another well known search algorithm, but it is also uninformed. In fact, BFS is a special case of Dijkstra, where the edges in the graph are unweighted.]]
+[^][[**Dijkstra** is another well known search algorithm, but it is also uninformed. In fact, BFS is a special case of Dijkstra, where the edges in the graph are unweighted.]]
