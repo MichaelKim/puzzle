@@ -12,9 +12,10 @@ const Note = (props: Props) => {
   const [visible, setVisible] = React.useState(false);
 
   const onClick = () => setVisible(!visible);
+  const onBlur = () => setVisible(false);
 
   return (
-    <S.Box onClick={onClick}>
+    <S.Box onClick={onClick} onBlur={onBlur}>
       [{props.num}]
       <S.Note style={{ display: visible ? 'block' : 'none' }}>
         {props.children}

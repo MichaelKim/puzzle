@@ -9,6 +9,10 @@ import BoardCol from './BoardCol.jsx';
 
 import './favicon.png';
 import 'katex/dist/katex.min.css';
+import './fonts/open-sans-700.woff';
+import './fonts/open-sans-700.woff2';
+import './fonts/open-sans-regular.woff';
+import './fonts/open-sans-regular.woff2';
 
 const Root = () => {
   const [index, setIndex] = React.useState(0);
@@ -29,6 +33,24 @@ const S = {
     body {
       background-color: #fffafa;
       margin: 0;
+    }
+
+    @font-face {
+      font-family: 'Open Sans';
+      font-style: normal;
+      font-weight: 400;
+      src: local('Open Sans Regular'), local('OpenSans-Regular'),
+          url('../fonts/open-sans-regular.woff2') format('woff2'),
+          url('../fonts/open-sans-regular.woff') format('woff');
+    }
+
+    @font-face {
+      font-family: 'Open Sans';
+      font-style: normal;
+      font-weight: 700;
+      src: local('Open Sans Bold'), local('OpenSans-Bold'),
+          url('../fonts/open-sans-700.woff2') format('woff2'),
+          url('../fonts/open-sans-700.woff') format('woff');
     }
   `,
   Root: styled.div`
