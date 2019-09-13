@@ -17,45 +17,112 @@ type Props = {|
 |};
 
 type State = {|
-  nums: number[],
-  tiles: {
-    [num: mixed]: TileType
+  +nums: number[],
+  +tiles: {
+    +[num: mixed]: TileType
   },
-  blank: {
-    x: number,
-    y: number
-  }
+  +blank: {|
+    +x: number,
+    +y: number
+  |}
 |};
 
-class Board extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = this._createState(props.width, props.height);
-  }
+const Board = (props: Props) => {
+  const [state, setState] = useTiles(props.width, props.height);
 
-  componentDidMount() {
-    document.addEventListener('keypress', this._onMove);
-  }
+  const applyMove = (dx: number, dy: number) => {
+    const nextBlank = {
+      x: state.blank.x + dx,
+      y: state.blank.y + dy
+    };
 
-  componentWillUnmount() {
-    document.removeEventListener('keypress', this._onMove);
-  }
-
-  componentDidUpdate(prevProps: Props) {
     if (
-      prevProps.width === this.props.width &&
-      prevProps.height === this.props.height
+      nextBlank.x < 0 ||
+      nextBlank.x >= props.width ||
+      nextBlank.y < 0 ||
+      nextBlank.y >= props.height
     ) {
       return;
     }
 
-    this.setState(this._createState(this.props.width, this.props.height));
-  }
+    const nextTiles = state.tiles;
+    const blankIndex = state.blank.y * props.width + state.blank.x;
+    const tileIndex = blankIndex + dx + props.width * dy;
+    const tileNum = state.nums[tileIndex];
 
-  _createState = (width: number, height: number) => {
+    nextTiles[tileNum].x = state.blank.x;
+    nextTiles[tileNum].y = state.blank.y;
+
+    const nextNums = state.nums;
+    nextNums[tileIndex] = 0;
+    nextNums[blankIndex] = tileNum;
+
+    setState({
+      nums: nextNums,
+      tiles: nextTiles,
+      blank: nextBlank
+    });
+  };
+
+  const onMove = (e: KeyboardEvent) => {
+    if (e.key === 'w') {
+      applyMove(0, 1);
+    } else if (e.key === 'a') {
+      applyMove(1, 0);
+    } else if (e.key === 's') {
+      applyMove(0, -1);
+    } else if (e.key === 'd') {
+      applyMove(-1, 0);
+    }
+  };
+
+  const onClick = (x: number, y: number) => {
+    const { blank } = state;
+    if (blank.x === x && blank.y + 1 === y) {
+      applyMove(0, 1);
+    } else if (blank.x + 1 === x && blank.y === y) {
+      applyMove(1, 0);
+    } else if (blank.x === x && blank.y - 1 === y) {
+      applyMove(0, -1);
+    } else if (blank.x - 1 === x && blank.y === y) {
+      applyMove(-1, 0);
+    }
+  };
+
+  React.useEffect(() => {
+    document.addEventListener('keypress', onMove);
+
+    return () => {
+      document.removeEventListener('keypress', onMove);
+    };
+  }, [onMove]);
+
+  return (
+    <S.Board>
+      {Object.keys(state.tiles).map(num => {
+        const tile = state.tiles[num];
+        return (
+          <Tile
+            key={tile.num}
+            width={100 / props.width}
+            height={100 / props.height}
+            value={tile.num}
+            x={tile.x}
+            y={tile.y}
+            onClick={onClick}
+          />
+        );
+      })}
+    </S.Board>
+  );
+};
+
+type StateHook = [State, (State) => void];
+const useTiles = (width: number, height: number): StateHook => {
+  const defaultState = React.useMemo(() => {
     const length = width * height;
     // 1, 2, ..., 14, 15 (length - 1)
-    const nums: number[] = [...Array(length - 1).keys()].map(i => i + 1);
+    const nums: Array<number> = [...Array(length - 1).keys()].map(i => i + 1);
     const tiles = nums.reduce(
       (acc, n) => ({
         ...acc,
@@ -70,98 +137,21 @@ class Board extends React.Component<Props, State> {
 
     return {
       nums: [...nums, 0],
-      tiles: tiles,
+      tiles,
       blank: {
         x: width - 1,
         y: height - 1
       }
     };
-  };
+  }, [width, height]);
 
-  _applyMove = (dx: number, dy: number) => {
-    this.setState((prevState, props) => {
-      const nextBlank = {
-        x: prevState.blank.x + dx,
-        y: prevState.blank.y + dy
-      };
+  const [state, setState] = React.useState(defaultState);
+  React.useEffect(() => {
+    setState(defaultState);
+  }, [width, height]);
 
-      if (
-        nextBlank.x < 0 ||
-        nextBlank.x >= props.width ||
-        nextBlank.y < 0 ||
-        nextBlank.y >= props.height
-      ) {
-        return;
-      }
-
-      const nextTiles = prevState.tiles;
-      const blankIndex = prevState.blank.y * props.width + prevState.blank.x;
-      const tileIndex = blankIndex + dx + props.width * dy;
-      const tileNum = prevState.nums[tileIndex];
-
-      nextTiles[tileNum].x = prevState.blank.x;
-      nextTiles[tileNum].y = prevState.blank.y;
-
-      const nextNums = prevState.nums;
-      nextNums[tileIndex] = 0;
-      nextNums[blankIndex] = tileNum;
-
-      return {
-        nums: nextNums,
-        tiles: nextTiles,
-        blank: nextBlank
-      };
-    });
-  };
-
-  _onMove = (e: KeyboardEvent) => {
-    if (e.key === 'w') {
-      this._applyMove(0, 1);
-    } else if (e.key === 'a') {
-      this._applyMove(1, 0);
-    } else if (e.key === 's') {
-      this._applyMove(0, -1);
-    } else if (e.key === 'd') {
-      this._applyMove(-1, 0);
-    }
-  };
-
-  _onClick = (x: number, y: number) => {
-    const { blank } = this.state;
-    if (blank.x === x && blank.y + 1 === y) {
-      this._applyMove(0, 1);
-    } else if (blank.x + 1 === x && blank.y === y) {
-      this._applyMove(1, 0);
-    } else if (blank.x === x && blank.y - 1 === y) {
-      this._applyMove(0, -1);
-    } else if (blank.x - 1 === x && blank.y === y) {
-      this._applyMove(-1, 0);
-    }
-  };
-
-  render() {
-    const { width, height } = this.props;
-
-    return (
-      <S.Board>
-        {Object.keys(this.state.tiles).map(num => {
-          const tile = this.state.tiles[num];
-          return (
-            <Tile
-              key={tile.num}
-              width={100 / width}
-              height={100 / height}
-              value={tile.num}
-              x={tile.x}
-              y={tile.y}
-              onClick={this._onClick}
-            />
-          );
-        })}
-      </S.Board>
-    );
-  }
-}
+  return [state, setState];
+};
 
 const S = {
   Board: styled.div`

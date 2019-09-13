@@ -28,6 +28,6 @@ declare module 'styled-components' {
 
   declare export default $ObjMap<
     BuiltinElementInstances,
-    <V>(V) => (Array<string>) => React$AbstractComponent<{}, {}>
+    <V>(V) => (Array<string>) => React$AbstractComponent<{}, *>
   >;
 }
