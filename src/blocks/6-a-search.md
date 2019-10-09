@@ -5,7 +5,7 @@ space: 300
 
 Let's assume we had some magical function $h(n)$ that takes in a node $n$ as input and estimates the length of the shortest path to an end node. We'll call this function the **heuristic** for now.
 
-A common pathfinding algorithm is **A\***. Unlike BFS, A\* is informed as it uses a heuristic which estimates the minimum cost to the end state. At each step of the search, A\* select the path with the minimum value of $f(n)$.
+A common pathfinding algorithm is **A\***. Unlike BFS, A\* is informed as it uses a heuristic to help guide the search. At each step of the search, A\* select the path with the minimum value of $f(n)$.
 
 $$f(n) = g(n) + h(n)$$
 

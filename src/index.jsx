@@ -54,6 +54,11 @@ const S = {
     p {
       font-size: 20px;
     }
+
+    ol,
+    ul {
+      font-size: 18px;
+    }
   `,
   Container: styled.div`
     display: flex;
