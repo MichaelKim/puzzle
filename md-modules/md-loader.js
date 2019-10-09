@@ -12,14 +12,19 @@ module.exports = function(src) {
 
   const num = this.resourcePath.match(/(\d+)-.+\.md$/)[1];
   cache[num] = c => {
-    const replaced = content.replace(
+    const r1 = content.replace(
       /\[\^\]\[\[(.+)\]\]/g,
       (match, note) => `<Note num={${c++}}>${note}</Note>`
     );
 
+    const r2 = r1.replace(
+      /\$\$.+\$\$/g,
+      match => `<div style={{textAlign: 'center'}}>\n\n${match}\n\n</div>`
+    );
+
     const output = `export const frontMatter = ${JSON.stringify(
       data
-    )};\nimport Note from "./Note.jsx";\n${replaced}`;
+    )};\nimport Note from "./Note.jsx";\n${r2}`;
     callback(null, output);
 
     return c;
