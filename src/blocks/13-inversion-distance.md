@@ -3,7 +3,7 @@ title: Inversion Distance (ID)
 space: 300
 ---
 
-The following two heuristics (Inversion Distance and Walking Distance) were both developed by Ken'ichiro Takahashi (takaken). [^][[You can read his description of them on [his website](http://www.ic-net.or.jp/home/takaken/nt/slide/solve15.html) (in Japanese). There's also a rough translation in English available [here](https://web.archive.org/web/20141224035932/http://juropollo.xe0.ru:80/stp_wd_translation_en.htm).]]
+The following two heuristics (Inversion Distance and Walking Distance) were both developed by Ken'ichiro Takahashi (takaken). [^][[You can read his description of them on [his website](http://www.ic-net.or.jp/home/takaken/nt/slide/solve15.html) (in Japanese). There's also a rough [translation in English](https://web.archive.org/web/20141224035932/http://juropollo.xe0.ru:80/stp_wd_translation_en.htm) available.]]
 
 Let's first unraveling the board into a single row of tiles (going left-to-right, top-to-bottom):
 

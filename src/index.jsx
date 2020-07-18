@@ -8,7 +8,8 @@ import TextCol from './TextCol.jsx';
 import BoardCol from './BoardCol.jsx';
 
 import './favicon.png';
-import 'katex/dist/katex.min.css';
+// import 'katex/dist/katex.min.css';
+import './katex.min.css';
 import './fonts/open-sans-700.woff';
 import './fonts/open-sans-700.woff2';
 import './fonts/open-sans-regular.woff';

@@ -1,22 +1,24 @@
 const matter = require('gray-matter');
 
-let count = 0;
+let count = 1;
 
 let cache = [];
 let countCache = [];
 let currIdx = 1;
 
-module.exports = function(src) {
+module.exports = function (src) {
   const callback = this.async();
   const { content, data } = matter(src);
 
   const num = this.resourcePath.match(/(\d+)-.+\.md$/)[1];
   cache[num] = c => {
+    // [^][[ note ]]
     const r1 = content.replace(
       /\[\^\]\[\[(.+)\]\]/g,
       (match, note) => `<Note num={${c++}}>${note}</Note>`
     );
 
+    // $$ block math $$
     const r2 = r1.replace(
       /\$\$.+\$\$/g,
       match => `<div style={{textAlign: 'center'}}>\n\n${match}\n\n</div>`
@@ -31,7 +33,7 @@ module.exports = function(src) {
   };
 
   if (countCache[num] != null) {
-    let count2 = countCache[num];
+    const count2 = countCache[num];
     cache[num](count2);
     return;
   }

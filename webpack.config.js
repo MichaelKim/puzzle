@@ -2,6 +2,8 @@ const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const HTMLInlineCSSWebpackPlugin = require('html-inline-css-webpack-plugin')
+  .default;
 const remarkMath = require('remark-math');
 const rehypeKatex = require('rehype-katex');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
@@ -86,42 +88,60 @@ const config = {
       }
     ]
   },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: path.resolve('./src/index.html')
-    }),
-    new MiniCssExtractPlugin()
-  ],
+  plugins: [new MiniCssExtractPlugin()],
   stats: {
     colors: true
   }
 };
 
-if (process.env.NODE_ENV === 'production') {
-  config.mode = 'production';
-  // Basic options, except ignore console statements
-  config.optimization = {
-    minimizer: [
-      new TerserPlugin({
-        cache: true,
-        parallel: true,
-        terserOptions: {
-          compress: {
-            drop_console: true
+module.exports = (env, argv) => {
+  if (argv.mode === 'production') {
+    config.mode = 'production';
+    // Basic options, except ignore console statements
+    config.optimization = {
+      minimizer: [
+        new TerserPlugin({
+          cache: true,
+          parallel: true,
+          terserOptions: {
+            compress: {
+              drop_console: true
+            }
           }
+        })
+      ]
+    };
+    config.plugins.push(
+      new HtmlWebpackPlugin({
+        template: path.resolve('./src/index.html'),
+        scriptLoading: 'defer',
+        minify: {
+          collapseWhitespace: true,
+          removeComments: true,
+          removeRedundantAttributes: true,
+          removeScriptTypeAttributes: true,
+          removeStyleLinkTypeAttributes: true,
+          useShortDoctype: true,
+          minifyCSS: true
         }
+      }),
+      new HTMLInlineCSSWebpackPlugin(),
+      new BundleAnalyzerPlugin()
+    );
+  } else {
+    config.mode = 'development';
+    config.devtool = '#cheap-module-source-map';
+    config.devServer = {
+      contentBase: path.resolve('./build'),
+      compress: true,
+      port: 8000
+    };
+    config.plugins.push(
+      new HtmlWebpackPlugin({
+        template: path.resolve('./src/index.html')
       })
-    ]
-  };
-  config.plugins.push(new BundleAnalyzerPlugin());
-} else {
-  config.mode = 'development';
-  config.devtool = '#cheap-module-source-map';
-  config.devServer = {
-    contentBase: path.resolve('./build'),
-    compress: true,
-    port: 8000
-  };
-}
+    );
+  }
 
-module.exports = config;
+  return config;
+};
