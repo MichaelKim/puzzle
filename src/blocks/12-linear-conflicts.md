@@ -1,5 +1,5 @@
 ---
-title: MD + Linear Conflicts (LD)
+title: MD + Linear Conflicts
 space: 300
 ---
 

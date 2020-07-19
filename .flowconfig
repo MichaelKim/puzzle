@@ -8,6 +8,7 @@
 
 [options]
 module.name_mapper.extension='md' -> '<PROJECT_ROOT>/md-modules/md-type.js'
+esproposal.optional_chaining=enable
 
 [strict]
 nonstrict-import

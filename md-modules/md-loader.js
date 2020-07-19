@@ -14,7 +14,7 @@ module.exports = function (src) {
   cache[num] = c => {
     // [^][[ note ]]
     const r1 = content.replace(
-      /\[\^\]\[\[(.+)\]\]/g,
+      /\[\^]\[\[((?:(?!]]).)+)]]/g,
       (match, note) => `<Note num={${c++}}>${note}</Note>`
     );
 

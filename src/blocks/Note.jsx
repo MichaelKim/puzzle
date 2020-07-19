@@ -8,39 +8,51 @@ type Props = {|
   +children: React.Node
 |};
 
-const Note = (props: Props) => {
-  const [visible, setVisible] = React.useState(false);
-  const ref = React.useRef<?HTMLDivElement>();
+type State = {|
+  visible: boolean
+|};
 
-  const onClick = () => setVisible(!visible);
-  const outsideClick = (e: MouseEvent) => {
+class Note extends React.Component<Props, State> {
+  state = {
+    visible: false
+  };
+  ref = React.createRef<HTMLDivElement>();
+
+  onClick = (e: MouseEvent) => {
+    if (e.target === this.ref.current) {
+      this.setState(({ visible }) => ({ visible: !visible }));
+    }
+  };
+
+  outsideClick = (e: MouseEvent) => {
     if (
-      ref.current == null ||
-      (e.target instanceof Node && ref.current.contains(e.target))
+      this.ref.current == null ||
+      (e.target instanceof Node && this.ref.current.contains(e.target))
     ) {
       return;
     }
-
-    setVisible(false);
+    this.setState({ visible: false });
   };
 
-  React.useEffect(() => {
-    document.addEventListener('mousedown', outsideClick);
+  componentDidMount() {
+    document.addEventListener('mousedown', this.outsideClick);
+  }
 
-    return () => {
-      document.removeEventListener('mousedown', outsideClick);
-    };
-  }, []);
+  componentWillUnmount() {
+    document.removeEventListener('mousedown', this.outsideClick);
+  }
 
-  return (
-    <S.Box onClick={onClick} ref={ref}>
-      [{props.num}]
-      <S.Note style={{ display: visible ? 'block' : 'none' }}>
-        {props.children}
-      </S.Note>
-    </S.Box>
-  );
-};
+  render() {
+    return (
+      <S.Box onClick={this.onClick} ref={this.ref}>
+        [{this.props.num}]
+        <S.Note style={{ display: this.state.visible ? 'block' : 'none' }}>
+          {this.props.children}
+        </S.Note>
+      </S.Box>
+    );
+  }
+}
 
 const S = {
   Box: styled.span`
@@ -59,6 +71,8 @@ const S = {
     border: 1px solid black;
     border-radius: 4px;
     padding: 4px;
+    cursor: auto;
+    z-index: 1;
   `
 };
 
