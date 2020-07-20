@@ -1,6 +1,6 @@
 ---
 title: ''
-space: 300
+space: 0
 ---
 
 This guide doesn't require any prior knowledge of algorithms, but will make references to data structures and a little bit of graph theory.

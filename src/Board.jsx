@@ -5,152 +5,115 @@ import styled from 'styled-components';
 
 import Tile from './Tile.jsx';
 
-type TileType = {|
-  num: number,
-  x: number,
-  y: number
-|};
-
 type Props = {|
   +width: number,
   +height: number
 |};
 
-type State = {|
-  +nums: number[],
-  +tiles: {
-    +[num: mixed]: TileType
-  },
-  +blank: {|
-    +x: number,
-    +y: number
-  |}
-|};
+const useTiles = (width: number, height: number) => {
+  const initialState = React.useMemo(() => {
+    const arr = [...Array(width * height - 1).keys()];
+    const places: number[] = [width * height - 1].concat(arr);
+    const values: number[] = arr.map(i => i + 1).concat(0);
 
-const Board = (props: Props) => {
-  const [state, setState] = useTiles(props.width, props.height);
-
-  const applyMove = (dx: number, dy: number) => {
-    const nextBlank = {
-      x: state.blank.x + dx,
-      y: state.blank.y + dy
+    return {
+      places,
+      values
     };
+  }, [width, height]);
 
-    if (
-      nextBlank.x < 0 ||
-      nextBlank.x >= props.width ||
-      nextBlank.y < 0 ||
-      nextBlank.y >= props.height
-    ) {
-      return;
-    }
+  const [tiles, setTiles] = React.useState(initialState);
+  React.useEffect(() => {
+    setTiles(initialState);
+  }, [initialState]);
 
-    const nextTiles = state.tiles;
-    const blankIndex = state.blank.y * props.width + state.blank.x;
-    const tileIndex = blankIndex + dx + props.width * dy;
-    const tileNum = state.nums[tileIndex];
+  const applyMove = React.useCallback(
+    (dx: number, dy: number) => {
+      setTiles(tiles => {
+        const newX = (tiles.places[0] % width) + dx;
+        const newY = Math.floor(tiles.places[0] / width) + dy;
 
-    nextTiles[tileNum].x = state.blank.x;
-    nextTiles[tileNum].y = state.blank.y;
+        if (newX < 0 || newX >= width || newY < 0 || newY >= height) {
+          return tiles;
+        }
 
-    const nextNums = state.nums;
-    nextNums[tileIndex] = 0;
-    nextNums[blankIndex] = tileNum;
+        const { places, values } = tiles;
+        // Perform slide
+        const tile = values[newY * width + newX];
 
-    setState({
-      nums: nextNums,
-      tiles: nextTiles,
-      blank: nextBlank
-    });
-  };
+        // Swap values
+        values[places[0]] = values[places[tile]];
+        values[places[tile]] = 0;
 
-  const onMove = (e: KeyboardEvent) => {
-    if (e.key === 'w') {
-      applyMove(0, 1);
-    } else if (e.key === 'a') {
-      applyMove(1, 0);
-    } else if (e.key === 's') {
-      applyMove(0, -1);
-    } else if (e.key === 'd') {
-      applyMove(-1, 0);
-    }
-  };
+        // Swap places
+        const temp = places[0];
+        places[0] = places[tile];
+        places[tile] = temp;
+
+        return {
+          places,
+          values
+        };
+      });
+    },
+    [width, height]
+  );
+
+  return [tiles, applyMove];
+};
+
+const Board = ({ width, height }: Props) => {
+  const [tiles, applyMove] = useTiles(width, height);
+  const [blank, ...places] = tiles.places;
 
   const onClick = (x: number, y: number) => {
-    const { blank } = state;
-    if (blank.x === x && blank.y + 1 === y) {
-      applyMove(0, 1);
-    } else if (blank.x + 1 === x && blank.y === y) {
-      applyMove(1, 0);
-    } else if (blank.x === x && blank.y - 1 === y) {
-      applyMove(0, -1);
-    } else if (blank.x - 1 === x && blank.y === y) {
-      applyMove(-1, 0);
+    const dx = (blank % width) - x;
+    const dy = Math.floor(blank / width) - y;
+    if (Math.abs(dx) + Math.abs(dy) === 1) {
+      applyMove(dx, dy);
     }
   };
 
   React.useEffect(() => {
+    const onMove = (e: KeyboardEvent) => {
+      switch (e.key) {
+        case 'w':
+          applyMove(0, 1);
+          break;
+        case 'a':
+          applyMove(1, 0);
+          break;
+        case 's':
+          applyMove(0, -1);
+          break;
+        case 'd':
+          applyMove(-1, 0);
+          break;
+      }
+    };
+
     document.addEventListener('keypress', onMove);
 
     return () => {
       document.removeEventListener('keypress', onMove);
     };
-  }, [onMove]);
+  }, [applyMove]);
 
   return (
     <S.Board>
-      {Object.keys(state.tiles).map(num => {
-        const tile = state.tiles[num];
-        return (
-          <Tile
-            key={tile.num}
-            width={100 / props.width}
-            height={100 / props.height}
-            value={tile.num}
-            x={tile.x}
-            y={tile.y}
-            onClick={onClick}
-          />
-        );
-      })}
+      {places.map((posn, i) => (
+        <Tile
+          key={i}
+          width={100 / width}
+          height={100 / height}
+          value={i + 1}
+          x={posn % width}
+          y={Math.floor(posn / width)}
+          onClick={onClick}
+        />
+      ))}
     </S.Board>
   );
-};
-
-type StateHook = [State, (State) => void];
-const useTiles = (width: number, height: number): StateHook => {
-  const defaultState = React.useMemo(() => {
-    const length = width * height;
-    // 1, 2, ..., 14, 15 (length - 1)
-    const nums: Array<number> = [...Array(length - 1).keys()].map(i => i + 1);
-    const tiles = nums.reduce(
-      (acc, n) => ({
-        ...acc,
-        [n]: {
-          num: n,
-          x: (n - 1) % width,
-          y: 0 | ((n - 1) / width)
-        }
-      }),
-      {}
-    );
-
-    return {
-      nums: [...nums, 0],
-      tiles,
-      blank: {
-        x: width - 1,
-        y: height - 1
-      }
-    };
-  }, [width, height]);
-
-  const [state, setState] = React.useState(defaultState);
-  React.useEffect(() => {
-    setState(defaultState);
-  }, [width, height]);
-
-  return [state, setState];
 };
 
 const S = {

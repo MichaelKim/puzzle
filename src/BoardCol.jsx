@@ -36,7 +36,7 @@ const S = {
   `,
   Sticky: styled.div`
     position: sticky;
-    top: 125px;
+    top: calc(50% - 200px);
   `,
   Controls: styled.div`
     transition: opacity 0.5s;

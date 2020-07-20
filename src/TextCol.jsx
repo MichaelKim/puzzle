@@ -4,7 +4,9 @@ import * as React from 'react';
 import styled from 'styled-components';
 
 import TextBlock from './TextBlock.jsx';
-import blocks from './blocks/index.jsx';
+import allBlocks from './blocks/index.jsx';
+
+const [firstBlock, ...blocks] = allBlocks;
 
 type Props = {|
   +onEnter: (index: number) => void
@@ -13,6 +15,10 @@ type Props = {|
 const TextCol = ({ onEnter }: Props) => {
   return (
     <S.TextCol>
+      <S.First>
+        <h2>{firstBlock.title}</h2>
+        {firstBlock.body}
+      </S.First>
       {blocks.map((block, i) => (
         <TextBlock
           key={i}
@@ -32,6 +38,12 @@ const S = {
     flex: 1;
     margin-right: 50px;
     max-width: calc(50% - 50px);
+  `,
+  First: styled.div`
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   `
 };
 
